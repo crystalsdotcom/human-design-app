@@ -13,13 +13,14 @@ interface Props {
   onUpgradeNeeded: () => void;
 }
 
-// ── Type-specific atmospheric colours ────────────────────────────────────────
-const TYPE_CONFIG: Record<string, { bg: string; blob1: string; blob2: string; blob3: string }> = {
-  "Generator":            { bg: "from-amber-50 via-[#FAF8F5] to-rose-50",       blob1: "bg-amber-200/50",   blob2: "bg-rose-200/40",    blob3: "bg-orange-100/60" },
-  "Manifesting Generator":{ bg: "from-teal-50 via-[#FAF8F5] to-emerald-50",    blob1: "bg-teal-200/50",    blob2: "bg-emerald-200/40", blob3: "bg-cyan-100/50"   },
-  "Projector":            { bg: "from-violet-50 via-[#FAF8F5] to-indigo-50",    blob1: "bg-violet-200/50",  blob2: "bg-indigo-200/40",  blob3: "bg-purple-100/50" },
-  "Manifestor":           { bg: "from-rose-50 via-[#FAF8F5] to-red-50",         blob1: "bg-rose-200/50",    blob2: "bg-red-200/40",     blob3: "bg-pink-100/50"   },
-  "Reflector":            { bg: "from-sky-50 via-[#FAF8F5] to-slate-50",        blob1: "bg-sky-200/50",     blob2: "bg-slate-200/40",   blob3: "bg-blue-100/50"   },
+// ── Aura orb colors — Jaakko Mattila / aura photography inspired ─────────────
+// r1=innermost ring, r4=outermost ring, glow=atmospheric halo
+const TYPE_CONFIG: Record<string, { r1: string; r2: string; r3: string; r4: string; glow: string }> = {
+  "Generator":            { r1:"rgba(253,186,116,0.90)", r2:"rgba(252,165,165,0.70)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,237,213,0.28)", glow:"rgba(253,186,116,0.20)" },
+  "Manifesting Generator":{ r1:"rgba(94,234,212,0.85)",  r2:"rgba(52,211,153,0.65)",  r3:"rgba(167,243,208,0.42)", r4:"rgba(204,251,241,0.26)", glow:"rgba(52,211,153,0.18)"  },
+  "Projector":            { r1:"rgba(196,181,253,0.90)", r2:"rgba(167,139,250,0.68)", r3:"rgba(147,197,253,0.45)", r4:"rgba(237,233,254,0.28)", glow:"rgba(167,139,250,0.18)" },
+  "Manifestor":           { r1:"rgba(253,164,175,0.90)", r2:"rgba(251,113,133,0.68)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,228,230,0.28)", glow:"rgba(251,113,133,0.18)" },
+  "Reflector":            { r1:"rgba(186,230,253,0.90)", r2:"rgba(147,197,253,0.68)", r3:"rgba(196,181,253,0.45)", r4:"rgba(224,242,254,0.28)", glow:"rgba(147,197,253,0.18)" },
 };
 
 // ── Profile poetic names ──────────────────────────────────────────────────────
@@ -52,13 +53,13 @@ const STRATEGY_MANTRA: Record<string, string> = {
   "Reflector":             "Let the moon decide",
 };
 
-// ── Definition short ──────────────────────────────────────────────────────────
+// ── Definition poetic ─────────────────────────────────────────────────────────
 const DEFINITION_SHORT: Record<string, string> = {
-  "Single Definition":    "Always yourself",
-  "Split Definition":     "Energised by others",
-  "Triple Split":         "Fluid & adaptable",
-  "Quadruple Split":      "Beautifully complex",
-  "No Definition":        "Pure reflection",
+  "Single Definition":  "Always yourself",
+  "Split Definition":   "Energised by others",
+  "Triple Split":       "Fluid & adaptable",
+  "Quadruple Split":    "Beautifully complex",
+  "No Definition":      "Pure reflection",
 };
 
 const CENTER_LABELS: Record<string, string> = {
@@ -82,6 +83,25 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
   const profileKey = `${chart.profile[0]}/${chart.profile[1]}`;
   const [pName1, pName2] = PROFILE_NAMES[profileKey] ?? ["—", "—"];
 
+  // Jaakko Mattila-style concentric aura orb — radial gradient with soft rings
+  const orbStops = [
+    "circle at 50% 50%",
+    "rgba(255,255,255,1) 0%",
+    "rgba(255,255,255,0.97) 8%",
+    `${cfg.r1} 12%`,
+    `${cfg.r1} 19%`,
+    "rgba(255,255,255,0.94) 22%",
+    `${cfg.r2} 26%`,
+    `${cfg.r2} 32%`,
+    "rgba(255,255,255,0.90) 35%",
+    `${cfg.r3} 39%`,
+    `${cfg.r3} 45%`,
+    "rgba(255,255,255,0.84) 48%",
+    `${cfg.r4} 52%`,
+    `${cfg.r4} 58%`,
+    "rgba(255,255,255,0) 65%",
+  ].join(", ");
+
   async function fetchInterpretation() {
     setInterpretation("");
     setStreaming(true);
@@ -93,92 +113,119 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F6F2]">
+    <div className="min-h-screen bg-[#FAF9F6]">
 
-      {/* ── HERO: atmospheric gradient + Turrell orbs ───────────────────── */}
-      <div className={`relative overflow-hidden bg-gradient-to-br ${cfg.bg} flex flex-col items-center justify-center text-center px-6 py-24 min-h-[56vh]`}>
-
-        {/* Glowing orbs — inspired by James Turrell light fields */}
-        <div className={`absolute -top-20 left-1/4 w-[420px] h-[420px] rounded-full ${cfg.blob1} blur-[120px] pointer-events-none`} />
-        <div className={`absolute -bottom-16 right-1/4 w-[380px] h-[380px] rounded-full ${cfg.blob2} blur-[110px] pointer-events-none`} />
-        <div className={`absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[320px] h-[320px] rounded-full ${cfg.blob3} blur-[90px] pointer-events-none`} />
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="relative flex flex-col items-center text-center px-6 pt-24 pb-24 overflow-hidden">
 
         {/* Back */}
         <button
           onClick={onReset}
-          className="absolute top-7 left-7 label-luxury text-[#1A1714]/35 hover:text-[#1A1714] transition-colors"
+          className="absolute top-8 left-8 label-luxury text-[#1A1714]/28 hover:text-[#1A1714]/65 transition-colors"
         >
           ← back
         </button>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-xl">
-          {chart.name && (
-            <p className="label-luxury mb-5">{chart.name}</p>
-          )}
+        {/* Name above orb */}
+        {chart.name && (
+          <p className="label-luxury mb-10 mt-2">{chart.name}</p>
+        )}
 
-          {/* Type — massive Cormorant italic */}
-          <h1 className="font-display italic text-7xl sm:text-8xl text-[#1A1714] leading-none mb-4">
-            {chart.type_}
-          </h1>
-
-          {/* Profile as poetic names */}
-          <p className="text-sm text-[#1A1714]/40 tracking-[0.18em] uppercase mb-10">
-            {chart.profile[0]} / {chart.profile[1]} &nbsp;·&nbsp; The {pName1} &amp; The {pName2}
-          </p>
-
-          {/* Three pillars */}
-          <div className="flex items-start justify-center gap-6 sm:gap-10 text-center flex-wrap">
-            <div>
-              <p className="label-luxury mb-1.5">Authority</p>
-              <p className="text-[13px] text-[#1A1714]/70">{AUTHORITY_NAMES[chart.authority] ?? chart.authority}</p>
-            </div>
-            <div className="w-px h-8 bg-[#1A1714]/10 self-center hidden sm:block" />
-            <div>
-              <p className="label-luxury mb-1.5">Strategy</p>
-              <p className="text-[13px] text-[#1A1714]/70">{STRATEGY_MANTRA[chart.type_]}</p>
-            </div>
-            <div className="w-px h-8 bg-[#1A1714]/10 self-center hidden sm:block" />
-            <div>
-              <p className="label-luxury mb-1.5">Definition</p>
-              <p className="text-[13px] text-[#1A1714]/70">{DEFINITION_SHORT[chart.definition] ?? chart.definition}</p>
-            </div>
-          </div>
-
-          {/* Channels as soft pills */}
-          {chart.defined_channels.length > 0 && (
-            <div className="flex flex-wrap gap-2 justify-center mt-8">
-              {chart.defined_channels.map((ch) => (
-                <span
-                  key={ch}
-                  className="text-[10px] tracking-widest uppercase border border-[#1A1714]/12 text-[#1A1714]/40 px-3 py-1.5 rounded-full"
-                >
-                  {ch}
-                </span>
-              ))}
-            </div>
-          )}
+        {/* ── PORTAL ORB ─ the visual centrepiece ─────────────────────── */}
+        <div className="relative mb-14">
+          {/* Wide outer atmospheric halo */}
+          <div
+            className="absolute -inset-20 rounded-full pointer-events-none"
+            style={{ background: `radial-gradient(circle, ${cfg.glow} 0%, transparent 68%)` }}
+          />
+          {/* Aura orb — concentric rings via radial-gradient, softened with blur */}
+          <div
+            className="w-[260px] h-[260px] sm:w-[340px] sm:h-[340px] rounded-full"
+            style={{
+              background: `radial-gradient(${orbStops})`,
+              filter: "blur(5px)",
+            }}
+          />
         </div>
-      </div>
 
-      {/* ── BODYGRAPH: floating, centred, minimal ─────────────────────────── */}
-      <div className="max-w-[300px] mx-auto py-16 px-4">
-        <Bodygraph chart={chart} />
-      </div>
+        {/* Type name — huge Cormorant italic, the statement */}
+        <h1 className="font-display italic text-7xl sm:text-8xl lg:text-9xl text-[#1A1714] leading-tight tracking-tight mb-5">
+          {chart.type_}
+        </h1>
 
-      {/* ── AI READING ────────────────────────────────────────────────────── */}
-      <div className="max-w-2xl mx-auto px-6 pb-16">
+        {/* Profile — whisper-light */}
+        <p className="text-[10px] text-[#1A1714]/30 tracking-[0.28em] uppercase mb-16">
+          {chart.profile[0]} / {chart.profile[1]}&ensp;·&ensp;The {pName1} &amp; The {pName2}
+        </p>
+
+        {/* Three pillars */}
+        <div className="flex items-center justify-center gap-8 sm:gap-16 flex-wrap">
+          <div className="text-center">
+            <p className="label-luxury mb-2">Authority</p>
+            <p className="text-[13px] text-[#1A1714]/52 tracking-wide">
+              {AUTHORITY_NAMES[chart.authority] ?? chart.authority}
+            </p>
+          </div>
+          <div className="hidden sm:block w-px h-6 bg-[#1A1714]/10 self-center" />
+          <div className="text-center">
+            <p className="label-luxury mb-2">Strategy</p>
+            <p className="text-[13px] text-[#1A1714]/52 tracking-wide">
+              {STRATEGY_MANTRA[chart.type_]}
+            </p>
+          </div>
+          <div className="hidden sm:block w-px h-6 bg-[#1A1714]/10 self-center" />
+          <div className="text-center">
+            <p className="label-luxury mb-2">Definition</p>
+            <p className="text-[13px] text-[#1A1714]/52 tracking-wide">
+              {DEFINITION_SHORT[chart.definition] ?? chart.definition}
+            </p>
+          </div>
+        </div>
+
+        {/* Channels — minimal pills, only shown if any */}
+        {chart.defined_channels.length > 0 && (
+          <div className="flex flex-wrap gap-2 justify-center mt-12 max-w-lg">
+            {chart.defined_channels.map((ch) => (
+              <span
+                key={ch}
+                className="text-[9px] tracking-[0.18em] uppercase border border-[#1A1714]/10 text-[#1A1714]/28 px-3 py-1.5 rounded-full"
+              >
+                {ch}
+              </span>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ── FULL-WIDTH RULE ───────────────────────────────────────────────── */}
+      <div className="w-full h-px bg-[#1A1714]/6" />
+
+      {/* ── BODYGRAPH — gallery object ────────────────────────────────────── */}
+      <section className="py-24 px-4 bg-[#F6F4F0]">
+        <p className="label-luxury text-center mb-14">Your Blueprint</p>
+        <div className="max-w-[280px] mx-auto">
+          <Bodygraph chart={chart} />
+        </div>
+      </section>
+
+      {/* ── FULL-WIDTH RULE ───────────────────────────────────────────────── */}
+      <div className="w-full h-px bg-[#1A1714]/6" />
+
+      {/* ── AI READING ───────────────────────────────────────────────────── */}
+      <section className="max-w-2xl mx-auto px-6 py-20 pb-24">
 
         {!hasAccess ? (
-          /* Paywall */
-          <div className="text-center border border-[#1A1714]/8 py-14 px-8">
-            <p className="font-display italic text-5xl text-[#1A1714] mb-4">Your Reading</p>
-            <p className="text-[13px] text-[#1A1714]/40 mb-8 max-w-xs mx-auto">
-              Unlock a personalised AI interpretation and Decision Simulator.
+          /* Paywall — art-fair membership energy */
+          <div className="text-center py-20 px-8 border border-[#1A1714]/7">
+            <p className="font-display italic text-6xl text-[#1A1714] mb-5 leading-tight">
+              Your Reading
+            </p>
+            <p className="text-[12px] text-[#1A1714]/36 tracking-wider leading-relaxed mb-12 max-w-xs mx-auto">
+              Unlock a personalised AI interpretation of your design and the Decision Simulator.
             </p>
             <button
               onClick={onUpgradeNeeded}
-              className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#F8F6F2] px-8 py-4 text-[11px] font-medium tracking-[0.22em] uppercase transition-all duration-300"
+              className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-10 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
             >
               Unlock — $29 / mo
             </button>
@@ -186,15 +233,15 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
         ) : (
           <>
             {/* Tab strip */}
-            <div className="flex gap-8 border-b border-[#1A1714]/8 mb-10">
+            <div className="flex gap-10 border-b border-[#1A1714]/8 mb-14">
               {(["reading", "simulator"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`label-luxury pb-4 transition-colors border-b-[1.5px] -mb-px ${
+                  className={`label-luxury pb-5 transition-colors border-b-[1.5px] -mb-px ${
                     activeTab === tab
-                      ? "border-[#1A1714] text-[#1A1714]/70"
-                      : "border-transparent text-[#1A1714]/25 hover:text-[#1A1714]/50"
+                      ? "border-[#1A1714] text-[#1A1714]/62"
+                      : "border-transparent text-[#1A1714]/20 hover:text-[#1A1714]/42"
                   }`}
                 >
                   {tab === "reading" ? "AI Reading" : "Decision Simulator"}
@@ -202,26 +249,30 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
               ))}
             </div>
 
-            {/* ── AI Reading ── */}
+            {/* ── AI Reading tab ── */}
             {activeTab === "reading" && (
               <div>
                 {!interpretation && !streaming && (
-                  <div className="text-center py-8 space-y-8">
+                  <div className="text-center py-4 space-y-12">
                     <div>
-                      <p className="font-display italic text-5xl text-[#1A1714] mb-2">Your Reading</p>
-                      <p className="text-[13px] text-[#1A1714]/35 tracking-wide">A personalised interpretation of your design</p>
+                      <p className="font-display italic text-6xl sm:text-7xl text-[#1A1714] leading-tight mb-3">
+                        Your Reading
+                      </p>
+                      <p className="text-[10px] text-[#1A1714]/30 tracking-[0.3em] uppercase">
+                        A personalised interpretation of your design
+                      </p>
                     </div>
 
                     {/* Depth selector */}
-                    <div className="flex gap-4 justify-center">
+                    <div className="flex gap-3 justify-center">
                       {(["quick", "standard", "deep"] as const).map((d) => (
                         <button
                           key={d}
                           onClick={() => setDepth(d)}
-                          className={`text-[10px] tracking-widest uppercase px-5 py-2.5 border transition-all duration-200 ${
+                          className={`text-[9px] tracking-[0.24em] uppercase px-5 py-3 border transition-all duration-200 ${
                             depth === d
-                              ? "border-[#1A1714] bg-[#1A1714] text-[#F8F6F2]"
-                              : "border-[#1A1714]/15 text-[#1A1714]/35 hover:border-[#1A1714]/40 hover:text-[#1A1714]/60"
+                              ? "border-[#1A1714] bg-[#1A1714] text-[#FAF9F6]"
+                              : "border-[#1A1714]/12 text-[#1A1714]/30 hover:border-[#1A1714]/32 hover:text-[#1A1714]/55"
                           }`}
                         >
                           {d === "quick" ? "Essence" : d === "standard" ? "Full" : "Deep Dive"}
@@ -229,7 +280,6 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                       ))}
                     </div>
 
-                    {/* Optional question */}
                     <input
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
@@ -239,7 +289,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
 
                     <button
                       onClick={fetchInterpretation}
-                      className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#F8F6F2] px-10 py-4 text-[11px] font-medium tracking-[0.22em] uppercase transition-all duration-300"
+                      className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-12 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
                     >
                       Receive your reading →
                     </button>
@@ -249,27 +299,27 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                 {(interpretation || streaming) && (
                   <div>
                     <div className="prose prose-base max-w-none
-                      [&_h2]:font-display [&_h2]:italic [&_h2]:text-3xl [&_h2]:font-normal [&_h2]:text-[#1A1714] [&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:leading-tight
-                      [&_h3]:text-[11px] [&_h3]:tracking-[0.2em] [&_h3]:uppercase [&_h3]:font-medium [&_h3]:text-[#1A1714]/40 [&_h3]:mt-8 [&_h3]:mb-2
+                      [&_h2]:font-display [&_h2]:italic [&_h2]:text-4xl [&_h2]:font-normal [&_h2]:text-[#1A1714] [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:leading-tight
+                      [&_h3]:text-[10px] [&_h3]:tracking-[0.26em] [&_h3]:uppercase [&_h3]:font-medium [&_h3]:text-[#1A1714]/35 [&_h3]:mt-10 [&_h3]:mb-3
                       [&_strong]:font-semibold [&_strong]:text-[#1A1714]
-                      [&_p]:text-[#1A1714]/65 [&_p]:leading-[1.85] [&_p]:text-[15px]
-                      [&_ul]:text-[#1A1714]/60 [&_li]:leading-relaxed [&_li]:text-[15px]">
+                      [&_p]:text-[#1A1714]/58 [&_p]:leading-[1.92] [&_p]:text-[15px]
+                      [&_ul]:text-[#1A1714]/55 [&_li]:leading-relaxed [&_li]:text-[15px]">
                       <ReactMarkdown>{interpretation}</ReactMarkdown>
                     </div>
                     {streaming && (
-                      <span className="inline-block w-[3px] h-5 bg-[#1A1714]/40 animate-pulse rounded-full ml-1 mt-2" />
+                      <span className="inline-block w-[2px] h-5 bg-[#1A1714]/32 animate-pulse rounded-full ml-1 mt-2" />
                     )}
                     {!streaming && (
-                      <div className="mt-10 pt-8 border-t border-[#1A1714]/8 flex gap-4 flex-wrap">
+                      <div className="mt-14 pt-8 border-t border-[#1A1714]/7 flex gap-6 flex-wrap">
                         <button
                           onClick={() => { setInterpretation(""); setQuestion(""); }}
-                          className="label-luxury text-[#1A1714]/35 hover:text-[#1A1714] transition-colors"
+                          className="label-luxury text-[#1A1714]/28 hover:text-[#1A1714]/62 transition-colors"
                         >
                           ← Start over
                         </button>
                         <button
                           onClick={fetchInterpretation}
-                          className="label-luxury text-[#1A1714]/35 hover:text-[#1A1714] transition-colors ml-auto"
+                          className="label-luxury text-[#1A1714]/28 hover:text-[#1A1714]/62 transition-colors ml-auto"
                         >
                           Read again ↺
                         </button>
@@ -280,53 +330,48 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
               </div>
             )}
 
-            {/* ── Decision Simulator ── */}
-            {activeTab === "simulator" && (
-              <DecisionSimulator chart={chart} />
-            )}
+            {/* ── Decision Simulator tab ── */}
+            {activeTab === "simulator" && <DecisionSimulator chart={chart} />}
           </>
         )}
-      </div>
+      </section>
 
-      {/* ── EXPANDABLE: raw activation data ───────────────────────────────── */}
-      <div className="border-t border-[#1A1714]/8">
+      {/* ── ACTIVATION MAP (collapsible) ──────────────────────────────────── */}
+      <div className="border-t border-[#1A1714]/7">
         <div className="max-w-2xl mx-auto px-6">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="w-full flex items-center justify-between py-6 label-luxury text-[#1A1714]/30 hover:text-[#1A1714]/55 transition-colors"
+            className="w-full flex items-center justify-between py-7 label-luxury text-[#1A1714]/22 hover:text-[#1A1714]/48 transition-colors"
           >
             <span>Activation Map</span>
-            <span className="text-base">{showDetails ? "↑" : "↓"}</span>
+            <span className="text-sm">{showDetails ? "↑" : "↓"}</span>
           </button>
 
           {showDetails && (
-            <div className="pb-12 space-y-10">
+            <div className="pb-16 space-y-12">
 
               {/* Gate activations */}
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Personality */}
+              <div className="grid md:grid-cols-2 gap-10">
                 <div>
-                  <p className="label-luxury mb-5 text-[#1A1714]/40">Personality · Conscious</p>
-                  <div className="space-y-2.5">
+                  <p className="label-luxury mb-6 text-[#1A1714]/32">Personality · Conscious</p>
+                  <div className="space-y-3">
                     {Object.entries(chart.personality).map(([planet, data]) => (
                       <div key={planet} className="flex justify-between items-center">
-                        <span className="text-[12px] text-[#1A1714]/40 capitalize">{planet.replace(/_/g, " ")}</span>
-                        <span className="text-[11px] font-mono text-[#1A1714]/55 tracking-wider">
+                        <span className="text-[11px] text-[#1A1714]/36 capitalize">{planet.replace(/_/g, " ")}</span>
+                        <span className="text-[10px] font-mono text-[#1A1714]/48 tracking-wider">
                           {data.gate}.{data.line}{data.retrograde ? " ℞" : ""}
                         </span>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                {/* Design */}
                 <div>
-                  <p className="label-luxury mb-5 text-[#7C3AED]/40">Design · Unconscious</p>
-                  <div className="space-y-2.5">
+                  <p className="label-luxury mb-6 text-[#7C3AED]/32">Design · Unconscious</p>
+                  <div className="space-y-3">
                     {Object.entries(chart.design).map(([planet, data]) => (
                       <div key={planet} className="flex justify-between items-center">
-                        <span className="text-[12px] text-[#1A1714]/40 capitalize">{planet.replace(/_/g, " ")}</span>
-                        <span className="text-[11px] font-mono text-[#7C3AED]/50 tracking-wider">
+                        <span className="text-[11px] text-[#1A1714]/36 capitalize">{planet.replace(/_/g, " ")}</span>
+                        <span className="text-[10px] font-mono text-[#7C3AED]/42 tracking-wider">
                           {data.gate}.{data.line}{data.retrograde ? " ℞" : ""}
                         </span>
                       </div>
@@ -337,21 +382,21 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
 
               {/* Centers */}
               <div>
-                <p className="label-luxury mb-5">Energy Centers</p>
+                <p className="label-luxury mb-6">Energy Centers</p>
                 <div className="grid grid-cols-3 gap-2">
                   {ALL_CENTERS.map((center) => {
                     const isDefined = chart.defined_centers.includes(center);
                     return (
                       <div
                         key={center}
-                        className={`text-center py-3 px-2 border transition ${
+                        className={`text-center py-4 px-2 border transition ${
                           isDefined
-                            ? "border-[#1A1714]/30 text-[#1A1714]"
-                            : "border-[#1A1714]/8 text-[#1A1714]/20"
+                            ? "border-[#1A1714]/22 text-[#1A1714]"
+                            : "border-[#1A1714]/7 text-[#1A1714]/16"
                         }`}
                       >
-                        <p className="text-[10px] tracking-widest uppercase">{CENTER_LABELS[center]}</p>
-                        <p className={`text-[9px] mt-1 tracking-wider ${isDefined ? "text-[#1A1714]/40" : "text-[#1A1714]/15"}`}>
+                        <p className="text-[9px] tracking-[0.2em] uppercase">{CENTER_LABELS[center]}</p>
+                        <p className={`text-[8px] mt-1.5 tracking-widest ${isDefined ? "text-[#1A1714]/35" : "text-[#1A1714]/14"}`}>
                           {isDefined ? "defined" : "open"}
                         </p>
                       </div>
@@ -360,13 +405,13 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                 </div>
               </div>
 
-              {/* Defined channels */}
+              {/* Channels */}
               {chart.defined_channels.length > 0 && (
                 <div>
-                  <p className="label-luxury mb-5">Defined Channels</p>
+                  <p className="label-luxury mb-6">Defined Channels</p>
                   <div className="flex flex-wrap gap-2">
                     {chart.defined_channels.map((ch) => (
-                      <span key={ch} className="text-[10px] tracking-widest uppercase border border-[#1A1714]/12 text-[#1A1714]/40 px-3 py-1.5">
+                      <span key={ch} className="text-[9px] tracking-[0.18em] uppercase border border-[#1A1714]/10 text-[#1A1714]/36 px-3 py-1.5">
                         {ch}
                       </span>
                     ))}
@@ -377,6 +422,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
           )}
         </div>
       </div>
+
     </div>
   );
 }
