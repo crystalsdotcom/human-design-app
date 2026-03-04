@@ -4,7 +4,8 @@ frontend/.next/
 frontend/out/
 
 # Python
-backend/__pycache__/
+__pycache__/
+**/__pycache__/
 backend/*.pyc
 backend/*.pyo
 backend/venv/
