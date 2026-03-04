@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F8F6F2;
+  --foreground: #1A1714;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-cormorant);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Luxury line input — no box, just a tasteful underline */
+.input-line {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(26, 23, 20, 0.18);
+  padding-bottom: 10px;
+  color: #1A1714;
+  font-size: 0.9375rem;
+  line-height: 1;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-line::placeholder {
+  color: rgba(26, 23, 20, 0.22);
+}
+.input-line:focus {
+  border-bottom-color: #1A1714;
+}
+
+.label-luxury {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(26, 23, 20, 0.38);
+  margin-bottom: 14px;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Suppress dark mode — this is a warm-light-only app */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #F8F6F2;
+    --foreground: #1A1714;
+  }
+}

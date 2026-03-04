@@ -1,0 +1,31 @@
+# Dependencies — never commit these (too large, machine-specific)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Python
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/venv/
+backend/.venv/
+
+# Environment files — NEVER commit (contains your API keys!)
+backend/.env
+frontend/.env.local
+.env
+
+# Large binary ephemeris/data files
+backend/de421.bsp
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
