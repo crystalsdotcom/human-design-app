@@ -30,3 +30,4 @@ backend/de421.bsp
 # Logs
 *.log
 npm-debug.log*
+.claude/settings.local.json
