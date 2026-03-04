@@ -47,6 +47,7 @@ export default function ChartForm({ onChart }: Props) {
   const [year,   setYear]   = useState("");
   const [hour,   setHour]   = useState("");
   const [minute, setMinute] = useState("");
+  const [ampm,   setAmpm]   = useState<"AM" | "PM">("AM");
 
   // City autocomplete
   const [cityQuery,    setCityQuery]    = useState("");
@@ -121,11 +122,16 @@ export default function ChartForm({ onChart }: Props) {
     if (!selectedCity)                { setError("Please select a birth city from the list."); return; }
 
     const y = parseInt(year), m = parseInt(month), d = parseInt(day);
-    const h = parseInt(hour), min = parseInt(minute);
+    const rawHour = parseInt(hour), min = parseInt(minute);
 
-    if (y < 1900 || y > 2025) { setError("Please enter a valid birth year."); return; }
-    if (h < 0 || h > 23)      { setError("Hour must be 0–23.");              return; }
-    if (min < 0 || min > 59)  { setError("Minute must be 0–59.");            return; }
+    if (y < 1900 || y > 2025)    { setError("Please enter a valid birth year."); return; }
+    if (rawHour < 1 || rawHour > 12) { setError("Hour must be 1–12.");           return; }
+    if (min < 0 || min > 59)     { setError("Minute must be 0–59.");             return; }
+
+    // Convert 12-hour → 24-hour
+    let h = rawHour;
+    if (ampm === "AM" && rawHour === 12) h = 0;
+    if (ampm === "PM" && rawHour !== 12) h = rawHour + 12;
 
     const offset = getOffsetAtDatetime(selectedCity.tz, y, m, d, h, min);
 
@@ -200,12 +206,12 @@ export default function ChartForm({ onChart }: Props) {
       {/* Birth Time */}
       <div className="mb-12">
         <label className="label-luxury">Time of Birth</label>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-3 gap-8">
           <div>
             <input
               value={hour}
               onChange={e => setHour(e.target.value.replace(/\D/g, "").slice(0, 2))}
-              placeholder="Hour (0–23)"
+              placeholder="Hour"
               className="input-line"
               maxLength={2}
             />
@@ -219,10 +225,17 @@ export default function ChartForm({ onChart }: Props) {
               maxLength={2}
             />
           </div>
+          <div>
+            <select
+              value={ampm}
+              onChange={e => setAmpm(e.target.value as "AM" | "PM")}
+              className="input-line cursor-pointer appearance-none"
+            >
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
         </div>
-        <p className="text-[10px] text-[#1A1714]/28 mt-3 tracking-wide">
-          Use 24-hour format — e.g. 14 for 2pm
-        </p>
       </div>
 
       {/* Birth City */}
