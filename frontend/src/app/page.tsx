@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ChartForm from "@/components/ChartForm";
 import ChartResult from "@/components/ChartResult";
 import AuthModal from "@/components/AuthModal";
@@ -9,13 +9,18 @@ import { ChartData } from "@/lib/api";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function Home() {
-  const [chart, setChart] = useState<ChartData | null>(null);
-  const [showAuth, setShowAuth] = useState(false);
+  const [chart, setChart]           = useState<ChartData | null>(null);
+  const [showAuth, setShowAuth]     = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const { session, isSubscribed, signOut, configured } = useAuth();
+  const formRef = useRef<HTMLDivElement>(null);
+
+  function scrollToForm() {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
-    <main className="min-h-screen bg-[#F8F6F2] text-[#1A1714]">
+    <main className="min-h-screen bg-[#FAF9F6] text-[#1A1714]">
 
       {/* Modals */}
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
@@ -26,92 +31,188 @@ export default function Home() {
         />
       )}
 
-      {/* Header — ultra minimal */}
-      <header className="px-8 py-6 flex items-center justify-between">
-        <div>
-          <span
-            className="text-sm font-medium tracking-[0.12em] text-[#1A1714] cursor-pointer"
-            onClick={() => setChart(null)}
-          >
-            HD<span className="text-[#7C3AED]">OS</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-6">
-          {configured && (
-            session ? (
-              <>
-                {!isSubscribed && (
-                  <button
-                    onClick={() => setShowUpgrade(true)}
-                    className="text-[10px] tracking-[0.2em] uppercase text-[#7C3AED] hover:opacity-70 transition"
-                  >
-                    Upgrade ✦
-                  </button>
-                )}
-                {isSubscribed && (
-                  <span className="text-[10px] tracking-[0.2em] uppercase text-[#7C3AED]">Pro ✦</span>
-                )}
-                <button
-                  onClick={() => signOut()}
-                  className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/35 hover:text-[#1A1714] transition"
-                >
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setShowAuth(true)}
-                className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/40 hover:text-[#1A1714] transition"
-              >
-                Sign in
-              </button>
-            )
-          )}
-        </div>
-      </header>
-
       {!chart ? (
-        /* ── HERO ───────────────────────────────────────────────── */
-        <div className="max-w-2xl mx-auto px-8">
+        <>
+          {/* ── HEADER ──────────────────────────────────────────────────── */}
+          <header className="absolute top-0 left-0 right-0 z-20 px-8 py-7 flex items-center justify-between">
+            <span className="text-sm font-medium tracking-[0.12em] text-[#1A1714]/70">
+              HD<span className="text-[#1A1714]">OS</span>
+            </span>
+            <div className="flex items-center gap-6">
+              {configured && (
+                session ? (
+                  <>
+                    {!isSubscribed && (
+                      <button onClick={() => setShowUpgrade(true)}
+                        className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/50 hover:text-[#1A1714] transition">
+                        Upgrade
+                      </button>
+                    )}
+                    <button onClick={() => signOut()}
+                      className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/35 hover:text-[#1A1714] transition">
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={() => setShowAuth(true)}
+                    className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/40 hover:text-[#1A1714] transition">
+                    Sign in
+                  </button>
+                )
+              )}
+            </div>
+          </header>
 
-          {/* Editorial headline */}
-          <div className="pt-20 pb-20 text-center">
-            <p className="text-[9px] tracking-[0.45em] uppercase text-[#1A1714]/30 mb-12">
-              Intelligent Energetic Architecture
-            </p>
+          {/* ── HERO — full screen, warm blush gradient ──────────────────── */}
+          <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-8 overflow-hidden"
+            style={{ background: "linear-gradient(170deg, #F2C5BC 0%, #F5D8D2 30%, #FAE8E4 60%, #FAF4F2 100%)" }}>
 
-            <h1
-              style={{ fontFamily: "var(--font-cormorant)" }}
-              className="text-[clamp(4rem,10vw,8rem)] font-light leading-[0.88] tracking-[-0.01em] text-[#1A1714] mb-10"
-            >
-              Know yourself<br />
-              <span className="italic text-[#7C3AED]">precisely.</span>
-            </h1>
+            {/* Subtle grain texture overlay */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+              style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
-            <p className="text-[#1A1714]/45 text-[13px] tracking-wide max-w-[260px] mx-auto leading-relaxed mb-20">
-              Enter your birth data below for an accurate Human Design chart.
-            </p>
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <p className="text-[9px] tracking-[0.45em] uppercase text-[#1A1714]/40 mb-14">
+                The Human Design Operating System
+              </p>
 
-            {/* The form */}
-            <ChartForm onChart={setChart} />
-          </div>
+              <h1 className="font-display italic text-[clamp(4.5rem,12vw,9rem)] leading-[0.9] text-[#1A1714] mb-10 tracking-tight">
+                The Blueprint<br />
+                of You.
+              </h1>
 
-          {/* Footer tagline */}
-          <div className="pb-16 text-center">
-            <p className="text-[9px] tracking-[0.35em] uppercase text-[#1A1714]/20">
+              <p className="font-display italic text-[clamp(1rem,2.5vw,1.4rem)] text-[#1A1714]/52 leading-relaxed mb-16 max-w-lg mx-auto">
+                Your energetic architecture, calculated to the exact moment of your birth.
+              </p>
+
+              <button
+                onClick={scrollToForm}
+                className="bg-[#1A1714] text-[#FAF9F6] rounded-full px-12 py-5 text-[10px] tracking-[0.3em] uppercase hover:bg-[#1A1714]/85 transition-all duration-300"
+              >
+                Reveal My Chart
+              </button>
+            </div>
+
+            {/* Scroll hint */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+              <div className="w-px h-12 bg-[#1A1714]/15" />
+            </div>
+          </section>
+
+          {/* ── PROBLEM CARDS ────────────────────────────────────────────── */}
+          <section className="px-6 py-28 bg-[#FAF9F6]">
+            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-5">
+
+              <div className="bg-[#F5F3EF] rounded-3xl p-12">
+                <p className="text-[9px] tracking-[0.38em] uppercase text-rose-400/80 mb-6">Problem 01</p>
+                <h2 className="font-display italic text-[2.4rem] leading-[1.1] text-[#1A1714] mb-6">
+                  Decision fatigue is a structural error.
+                </h2>
+                <p className="text-[14px] text-[#1A1714]/50 leading-relaxed">
+                  You were taught to think your way to answers. But for most people, the mind is the worst decision-maker. Human Design reveals your built-in authority — the biological compass you were born with.
+                </p>
+              </div>
+
+              <div className="bg-[#F5F3EF] rounded-3xl p-12">
+                <p className="text-[9px] tracking-[0.38em] uppercase text-rose-400/80 mb-6">Problem 02</p>
+                <h2 className="font-display italic text-[2.4rem] leading-[1.1] text-[#1A1714] mb-6">
+                  Burnout isn&apos;t laziness. It&apos;s friction.
+                </h2>
+                <p className="text-[14px] text-[#1A1714]/50 leading-relaxed">
+                  When you operate against your type, resistance is inevitable. Your chart identifies exactly where your energy leaks — and the strategy required to move through life without the push.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          {/* ── HOW IT WORKS ─────────────────────────────────────────────── */}
+          <section className="px-6 py-28 text-center bg-[#F6F4F0]">
+            <h2 className="font-display italic text-[clamp(2.8rem,6vw,5rem)] text-[#1A1714] mb-20">
+              How it works.
+            </h2>
+
+            <div className="max-w-2xl mx-auto flex items-start justify-center gap-0">
+              {/* Step 1 */}
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-12 h-12 rounded-full border border-[#1A1714]/20 flex items-center justify-center mb-5">
+                  <span className="font-display italic text-xl text-[#1A1714]/50">1</span>
+                </div>
+                <p className="text-[9px] tracking-[0.28em] uppercase text-[#1A1714]/35">Enter birth data</p>
+              </div>
+              {/* Line */}
+              <div className="w-16 h-px bg-[#1A1714]/12 mt-6 flex-shrink-0" />
+              {/* Step 2 */}
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-12 h-12 rounded-full border border-[#1A1714]/20 flex items-center justify-center mb-5">
+                  <span className="font-display italic text-xl text-[#1A1714]/50">2</span>
+                </div>
+                <p className="text-[9px] tracking-[0.28em] uppercase text-[#1A1714]/35">Calculate chart</p>
+              </div>
+              {/* Line */}
+              <div className="w-16 h-px bg-[#1A1714]/12 mt-6 flex-shrink-0" />
+              {/* Step 3 */}
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-12 h-12 rounded-full border border-[#1A1714]/20 flex items-center justify-center mb-5">
+                  <span className="font-display italic text-xl text-[#1A1714]/50">3</span>
+                </div>
+                <p className="text-[9px] tracking-[0.28em] uppercase text-[#1A1714]/35">Receive reading</p>
+              </div>
+            </div>
+          </section>
+
+          {/* ── FORM SECTION ─────────────────────────────────────────────── */}
+          <section ref={formRef} className="px-6 py-28 bg-[#FAF9F6]">
+            <div className="max-w-lg mx-auto text-center mb-16">
+              <p className="text-[9px] tracking-[0.42em] uppercase text-[#1A1714]/30 mb-6">
+                Precision mapped to your birth coordinates
+              </p>
+              <h2 className="font-display italic text-[clamp(3rem,7vw,5.5rem)] leading-[0.95] text-[#1A1714]">
+                Begin here.
+              </h2>
+            </div>
+
+            <div className="max-w-lg mx-auto">
+              <ChartForm onChart={setChart} />
+            </div>
+
+            <p className="text-center text-[9px] tracking-[0.35em] uppercase text-[#1A1714]/18 mt-20">
               Ephemeris-accurate · AI interpreted
             </p>
-          </div>
-        </div>
+          </section>
+        </>
 
       ) : (
-        /* ── RESULT — full width, ChartResult manages its own layout ── */
-        <ChartResult
-          chart={chart}
-          onReset={() => setChart(null)}
-          onUpgradeNeeded={() => setShowUpgrade(true)}
-        />
+        /* ── RESULT ─────────────────────────────────────────────────────── */
+        <>
+          <header className="px-8 py-6 flex items-center justify-between">
+            <span className="text-sm font-medium tracking-[0.12em] text-[#1A1714] cursor-pointer"
+              onClick={() => setChart(null)}>
+              HD<span className="text-[#7C3AED]">OS</span>
+            </span>
+            <div className="flex items-center gap-6">
+              {configured && session && (
+                <>
+                  {!isSubscribed && (
+                    <button onClick={() => setShowUpgrade(true)}
+                      className="text-[10px] tracking-[0.2em] uppercase text-[#7C3AED] hover:opacity-70 transition">
+                      Upgrade ✦
+                    </button>
+                  )}
+                  <button onClick={() => signOut()}
+                    className="text-[10px] tracking-[0.2em] uppercase text-[#1A1714]/35 hover:text-[#1A1714] transition">
+                    Sign out
+                  </button>
+                </>
+              )}
+            </div>
+          </header>
+          <ChartResult
+            chart={chart}
+            onReset={() => setChart(null)}
+            onUpgradeNeeded={() => setShowUpgrade(true)}
+          />
+        </>
       )}
     </main>
   );
