@@ -24,7 +24,7 @@
 | `SUPABASE_SERVICE_KEY` | Your Supabase service role key |
 | `STRIPE_SECRET_KEY` | Your Stripe secret key |
 | `STRIPE_WEBHOOK_SECRET` | Your Stripe webhook signing secret |
-| `STRIPE_PRICE_ID_MONTHLY` | Your Stripe price ID for the $29/mo plan |
+| `STRIPE_PRICE_ID_MONTHLY` | Your Stripe price ID for the $34/mo plan |
 | `EPHEMERIS_PATH` | `./ephe` |
 | `FRONTEND_URL` | Your Vercel URL (set after Step 2) |
 
