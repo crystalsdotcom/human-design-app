@@ -63,39 +63,41 @@ export default function Home() {
             </div>
           </header>
 
-          {/* ── HERO — full screen, warm blush gradient ──────────────────── */}
-          <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-8 overflow-hidden"
-            style={{ background: "linear-gradient(170deg, #F2C5BC 0%, #F5D8D2 30%, #FAE8E4 60%, #FAF4F2 100%)" }}>
+          {/* ── HERO — Turrell darkness, light from within ───────────────── */}
+          <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-8 overflow-hidden bg-[#0A0806]">
 
-            {/* Subtle grain texture overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-              style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+            {/* Turrell aperture — warm amber light emanating from center */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(210,165,100,0.16) 0%, rgba(160,110,55,0.08) 35%, transparent 70%)" }} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(245,215,160,0.08) 0%, transparent 70%)" }} />
+            </div>
 
             <div className="relative z-10 max-w-3xl mx-auto">
-              <p className="text-[9px] tracking-[0.45em] uppercase text-[#1A1714]/40 mb-14">
+              <p className="text-[9px] tracking-[0.5em] uppercase text-[#F5F0E8]/22 mb-14">
                 The Human Design Operating System
               </p>
 
-              <h1 className="font-display italic text-[clamp(4.5rem,12vw,9rem)] leading-[0.9] text-[#1A1714] mb-10 tracking-tight">
+              <h1 className="font-display italic text-[clamp(4.5rem,12vw,9rem)] leading-[0.9] text-[#F5F0E8] mb-10 tracking-tight">
                 The Blueprint<br />
                 of You.
               </h1>
 
-              <p className="font-display italic text-[clamp(1rem,2.5vw,1.4rem)] text-[#1A1714]/52 leading-relaxed mb-16 max-w-lg mx-auto">
+              <p className="font-display italic text-[clamp(1rem,2.5vw,1.35rem)] text-[#F5F0E8]/38 leading-relaxed mb-16 max-w-lg mx-auto">
                 Your energetic architecture, calculated to the exact moment of your birth.
               </p>
 
               <button
                 onClick={scrollToForm}
-                className="bg-[#1A1714] text-[#FAF9F6] rounded-full px-12 py-5 text-[10px] tracking-[0.3em] uppercase hover:bg-[#1A1714]/85 transition-all duration-300"
+                className="border border-[#F5F0E8]/22 text-[#F5F0E8]/65 rounded-full px-12 py-5 text-[10px] tracking-[0.3em] uppercase hover:border-[#F5F0E8]/55 hover:text-[#F5F0E8]/90 transition-all duration-500"
               >
                 Reveal My Chart
               </button>
             </div>
 
-            {/* Scroll hint */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-              <div className="w-px h-12 bg-[#1A1714]/15" />
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+              <div className="w-px h-12 bg-[#F5F0E8]/10" />
             </div>
           </section>
 
