@@ -13,14 +13,44 @@ interface Props {
   onUpgradeNeeded: () => void;
 }
 
-// ── Aura orb colors — Jaakko Mattila / aura photography inspired ─────────────
-// r1=innermost ring, r4=outermost ring, glow=atmospheric halo
-const TYPE_CONFIG: Record<string, { r1: string; r2: string; r3: string; r4: string; glow: string }> = {
-  "Generator":            { r1:"rgba(253,186,116,0.90)", r2:"rgba(252,165,165,0.70)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,237,213,0.28)", glow:"rgba(253,186,116,0.20)" },
-  "Manifesting Generator":{ r1:"rgba(94,234,212,0.85)",  r2:"rgba(52,211,153,0.65)",  r3:"rgba(167,243,208,0.42)", r4:"rgba(204,251,241,0.26)", glow:"rgba(52,211,153,0.18)"  },
-  "Projector":            { r1:"rgba(196,181,253,0.90)", r2:"rgba(167,139,250,0.68)", r3:"rgba(147,197,253,0.45)", r4:"rgba(237,233,254,0.28)", glow:"rgba(167,139,250,0.18)" },
-  "Manifestor":           { r1:"rgba(253,164,175,0.90)", r2:"rgba(251,113,133,0.68)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,228,230,0.28)", glow:"rgba(251,113,133,0.18)" },
-  "Reflector":            { r1:"rgba(186,230,253,0.90)", r2:"rgba(147,197,253,0.68)", r3:"rgba(196,181,253,0.45)", r4:"rgba(224,242,254,0.28)", glow:"rgba(147,197,253,0.18)" },
+// ── Type configuration — orb colors + full-page atmosphere ───────────────────
+const TYPE_CONFIG: Record<string, {
+  r1: string; r2: string; r3: string; r4: string; glow: string;
+  // Page atmosphere
+  heroBg: string;        // hero section background gradient
+  accent: string;        // accent text/border color (hex)
+  tagline: string;       // one-line essence for this type
+}> = {
+  "Generator": {
+    r1:"rgba(253,186,116,0.90)", r2:"rgba(252,165,165,0.70)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,237,213,0.28)", glow:"rgba(253,186,116,0.22)",
+    heroBg: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(253,186,116,0.13) 0%, rgba(254,215,170,0.06) 55%, transparent 80%)",
+    accent: "#D97706",
+    tagline: "You are the life force.",
+  },
+  "Manifesting Generator": {
+    r1:"rgba(94,234,212,0.85)", r2:"rgba(52,211,153,0.65)", r3:"rgba(167,243,208,0.42)", r4:"rgba(204,251,241,0.26)", glow:"rgba(52,211,153,0.20)",
+    heroBg: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(52,211,153,0.12) 0%, rgba(167,243,208,0.06) 55%, transparent 80%)",
+    accent: "#059669",
+    tagline: "You contain multitudes.",
+  },
+  "Projector": {
+    r1:"rgba(196,181,253,0.90)", r2:"rgba(167,139,250,0.68)", r3:"rgba(147,197,253,0.45)", r4:"rgba(237,233,254,0.28)", glow:"rgba(167,139,250,0.20)",
+    heroBg: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(167,139,250,0.12) 0%, rgba(196,181,253,0.06) 55%, transparent 80%)",
+    accent: "#7C3AED",
+    tagline: "You see what others miss.",
+  },
+  "Manifestor": {
+    r1:"rgba(253,164,175,0.90)", r2:"rgba(251,113,133,0.68)", r3:"rgba(254,202,202,0.45)", r4:"rgba(255,228,230,0.28)", glow:"rgba(251,113,133,0.20)",
+    heroBg: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(251,113,133,0.12) 0%, rgba(254,202,202,0.06) 55%, transparent 80%)",
+    accent: "#BE185D",
+    tagline: "You move first.",
+  },
+  "Reflector": {
+    r1:"rgba(186,230,253,0.90)", r2:"rgba(147,197,253,0.68)", r3:"rgba(196,181,253,0.45)", r4:"rgba(224,242,254,0.28)", glow:"rgba(147,197,253,0.20)",
+    heroBg: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(147,197,253,0.12) 0%, rgba(186,230,253,0.06) 55%, transparent 80%)",
+    accent: "#0284C7",
+    tagline: "You are the rarest mirror.",
+  },
 };
 
 // ── Profile poetic names ──────────────────────────────────────────────────────
@@ -113,10 +143,13 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6]">
+    <div className="min-h-screen bg-[#FDFAF5]">
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative flex flex-col items-center text-center px-6 pt-24 pb-24 overflow-hidden">
+      <section
+        className="relative flex flex-col items-center text-center px-6 pt-24 pb-24 overflow-hidden"
+        style={{ background: `${cfg.heroBg}, #FDFAF5` }}
+      >
 
         {/* Back */}
         <button
@@ -149,9 +182,14 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
         </div>
 
         {/* Type name — huge Cormorant italic, the statement */}
-        <h1 className="font-display italic text-7xl sm:text-8xl lg:text-9xl text-[#1A1714] leading-tight tracking-tight mb-5">
+        <h1 className="font-display italic text-7xl sm:text-8xl lg:text-9xl text-[#1A1714] leading-tight tracking-tight mb-3">
           {chart.type_}
         </h1>
+
+        {/* Type tagline — the essence in one line */}
+        <p className="font-display italic text-xl mb-5" style={{ color: cfg.accent, opacity: 0.75 }}>
+          {cfg.tagline}
+        </p>
 
         {/* Profile — whisper-light */}
         <p className="text-[10px] text-[#1A1714]/30 tracking-[0.28em] uppercase mb-16">
@@ -201,7 +239,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
       <div className="w-full h-px bg-[#1A1714]/6" />
 
       {/* ── BODYGRAPH — gallery object ────────────────────────────────────── */}
-      <section className="py-24 px-4 bg-[#F6F4F0]">
+      <section className="py-24 px-4 bg-[#F8F5F0]">
         <p className="label-luxury text-center mb-14">Your Blueprint</p>
         <div className="max-w-[280px] mx-auto">
           <Bodygraph chart={chart} />
@@ -274,7 +312,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                   onClick={onUpgradeNeeded}
                   className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-12 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
                 >
-                  Unlock — $29 / mo
+                  Illuminate — $14 / mo
                 </button>
               </div>
 

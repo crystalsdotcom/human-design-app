@@ -74,9 +74,9 @@ export default function UpgradeModal({ onClose, onSignInNeeded }: Props) {
 
         {/* Price */}
         <div className="border border-[#1A1714]/8 px-6 py-5 mb-10 flex items-baseline gap-2">
-          <span className="font-display italic text-[3rem] text-[#1A1714] leading-none">$29</span>
+          <span className="font-display italic text-[3rem] text-[#1A1714] leading-none">$34</span>
           <span className="text-[12px] text-[#1A1714]/35 tracking-wider">/ month</span>
-          <span className="ml-auto text-[10px] text-[#1A1714]/25 tracking-[0.2em] uppercase">Cancel anytime</span>
+          <span className="ml-auto text-[10px] text-[#1A1714]/25 tracking-[0.2em] uppercase">or $249 / year</span>
         </div>
 
         {/* Features */}
