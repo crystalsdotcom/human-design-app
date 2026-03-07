@@ -9,10 +9,10 @@ interface Props {
 
 export default function AuthModal({ onClose }: Props) {
   const { signInWithEmail } = useAuth();
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [email, setEmail]   = useState("");
+  const [sent, setSent]     = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]   = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,62 +26,83 @@ export default function AuthModal({ onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#1C1917]/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
-
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      style={{ background: "rgba(10,8,6,0.72)", backdropFilter: "blur(12px)" }}
+    >
+      <div
+        className="relative w-full max-w-sm bg-[#FAF9F6] px-10 py-14"
+        style={{ boxShadow: "0 32px 80px rgba(10,8,6,0.28)" }}
+      >
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#1C1917]/25 hover:text-[#1C1917] transition text-lg leading-none"
+          className="absolute top-6 right-7 text-[#1A1714]/22 hover:text-[#1A1714]/60 transition-colors text-xl leading-none"
         >
           ×
         </button>
 
         {!sent ? (
           <>
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-[#1C1917] mb-1">Welcome to HDOS</h2>
-              <p className="text-sm text-[#78716C]">Enter your email — we'll send a magic link. No password needed.</p>
-            </div>
+            <p className="text-[9px] tracking-[0.42em] uppercase text-[#1A1714]/30 mb-5">
+              Create account
+            </p>
+            <h2 className="font-display italic text-[2.6rem] leading-[1.05] text-[#1A1714] mb-3">
+              Begin your<br />journey.
+            </h2>
+            <p className="text-[13px] text-[#1A1714]/42 leading-relaxed mb-10">
+              Enter your email and we&apos;ll send a magic link.<br />No password needed.
+            </p>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="w-full bg-[#FAF8F5] border border-[#1C1917]/10 rounded-xl px-4 py-3 text-[#1C1917] placeholder-[#1C1917]/30 focus:outline-none focus:border-[#7C3AED]/40 focus:ring-2 focus:ring-[#7C3AED]/8 transition text-sm"
-              />
-              {error && (
-                <p className="text-xs text-red-500">{error}</p>
-              )}
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div>
+                <label className="text-[9px] tracking-[0.32em] uppercase text-[#1A1714]/30 block mb-3">
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  className="input-line w-full text-sm"
+                />
+                {error && (
+                  <p className="text-[11px] text-rose-400 mt-2">{error}</p>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#1C1917] hover:bg-[#1C1917]/90 disabled:opacity-40 rounded-xl py-3 font-medium text-white transition text-sm"
+                className="w-full border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] disabled:opacity-30 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
               >
                 {loading ? "Sending…" : "Send Magic Link →"}
               </button>
             </form>
 
-            <p className="text-[10px] text-[#1C1917]/25 text-center mt-4">
+            <p className="text-[9px] text-[#1A1714]/20 text-center mt-8">
               By continuing you agree to our Terms & Privacy Policy
             </p>
           </>
         ) : (
-          <div className="text-center py-4">
-            <div className="text-4xl mb-4">✉️</div>
-            <h2 className="text-lg font-bold text-[#1C1917] mb-2">Check your inbox</h2>
-            <p className="text-sm text-[#78716C]">
-              We sent a magic link to <span className="font-medium text-[#1C1917]">{email}</span>.
-              Click it to sign in — no password needed.
+          <div className="text-center">
+            <p className="text-[9px] tracking-[0.42em] uppercase text-[#1A1714]/30 mb-5">
+              Check your inbox
+            </p>
+            <h2 className="font-display italic text-[2.6rem] leading-[1.05] text-[#1A1714] mb-6">
+              Link sent.
+            </h2>
+            <p className="text-[13px] text-[#1A1714]/42 leading-relaxed mb-10">
+              We sent a magic link to{" "}
+              <span className="text-[#1A1714]/75">{email}</span>.
+              <br />Click it to sign in instantly.
             </p>
             <button
               onClick={onClose}
-              className="mt-6 text-sm text-[#7C3AED] hover:underline"
+              className="label-luxury text-[#1A1714]/30 hover:text-[#1A1714]/65 transition-colors"
             >
-              Got it
+              Close
             </button>
           </div>
         )}

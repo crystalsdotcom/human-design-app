@@ -215,20 +215,73 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
       <section className="max-w-2xl mx-auto px-6 py-20 pb-24">
 
         {!hasAccess ? (
-          /* Paywall — art-fair membership energy */
-          <div className="text-center py-20 px-8 border border-[#1A1714]/7">
-            <p className="font-display italic text-6xl text-[#1A1714] mb-5 leading-tight">
+          /* ── PAYWALL — teaser + gate ─────────────────────────────────── */
+          <div>
+            {/* Label */}
+            <p className="text-[9px] tracking-[0.42em] uppercase text-[#1A1714]/25 mb-10 text-center">
               Your Reading
             </p>
-            <p className="text-[12px] text-[#1A1714]/36 tracking-wider leading-relaxed mb-12 max-w-xs mx-auto">
-              Unlock a personalised AI interpretation of your design and the Decision Simulator.
-            </p>
-            <button
-              onClick={onUpgradeNeeded}
-              className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-10 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
-            >
-              Unlock — $29 / mo
-            </button>
+
+            {/* Blurred teaser — sample text to create desire */}
+            <div className="relative mb-14 overflow-hidden">
+              {/* Sample reading copy, blurred */}
+              <div
+                className="pointer-events-none select-none space-y-5"
+                style={{ filter: "blur(6px)", opacity: 0.45 }}
+                aria-hidden="true"
+              >
+                <h2 className="font-display italic text-4xl text-[#1A1714] leading-tight">
+                  You are built to move when life meets you.
+                </h2>
+                <p className="text-[15px] text-[#1A1714]/58 leading-[1.92]">
+                  As a {chart.type_}, your energy does not initiate — it responds. This is not passivity. It is
+                  precision. Every time you have overridden this and forced action from sheer will, the friction
+                  you felt was not failure. It was your design telling you the timing was off.
+                </p>
+                <p className="text-[15px] text-[#1A1714]/58 leading-[1.92]">
+                  Your {chart.profile[0]}/{chart.profile[1]} profile is the lens through which your life
+                  experience is organised. It shapes how others see you before you say a word, and how
+                  you are meant to learn — through direct contact with what does not work.
+                </p>
+                <p className="text-[15px] text-[#1A1714]/58 leading-[1.92]">
+                  The authority in your chart is not a concept. It is a physical signal, available to
+                  you right now. Learning to trust it will feel counterintuitive at first — because you
+                  were conditioned to override it.
+                </p>
+              </div>
+
+              {/* Gradient fade over the blurred text — bottom fade to white */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
+                style={{ background: "linear-gradient(to bottom, transparent, #FAF9F6)" }}
+              />
+            </div>
+
+            {/* Gate UI */}
+            <div className="text-center space-y-7">
+              <div>
+                <h3 className="font-display italic text-[2.4rem] leading-tight text-[#1A1714] mb-3">
+                  Your reading is ready.
+                </h3>
+                <p className="text-[13px] text-[#1A1714]/40 leading-relaxed max-w-xs mx-auto">
+                  Unlock your full personalised AI interpretation — your type, authority, channels,
+                  and what it all means for how you move through life.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={onUpgradeNeeded}
+                  className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-12 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
+                >
+                  Unlock — $29 / mo
+                </button>
+              </div>
+
+              <p className="text-[9px] text-[#1A1714]/20 tracking-[0.2em] uppercase">
+                Cancel anytime · Secured by Stripe
+              </p>
+            </div>
           </div>
         ) : (
           <>
