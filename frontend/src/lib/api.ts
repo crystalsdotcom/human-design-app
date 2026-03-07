@@ -100,7 +100,7 @@ export async function streamDecisionSimulation(
 
 export async function streamInterpretation(
   chart: ChartData,
-  question?: string,
+  question: string | undefined,
   depth: "quick" | "standard" | "deep" = "standard",
   onChunk: (chunk: string) => void,
   onDone: () => void
