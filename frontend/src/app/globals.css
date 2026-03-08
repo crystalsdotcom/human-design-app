@@ -1,43 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F8F6F2;
-  --foreground: #1A1714;
+  /* Base Palette — Section 12 "Luminous" */
+  --bg-primary:       #FBF8F4;
+  --bg-secondary:     #F5F0E8;
+  --bg-dark:          #1A1625;
+  --text-primary:     #2D2A33;
+  --text-secondary:   #7A7580;
+  --text-tertiary:    #B0ABB5;
+  --border:           #E8E3DC;
+  --accent-gold:      #C4A265;
+  --accent-coral:     #E87461;
+
+  /* Type Aura Gradients */
+  --aura-generator:       linear-gradient(135deg, #F0A830, #E8892C);
+  --aura-mg:              linear-gradient(135deg, #E8892C, #D4617A);
+  --aura-projector:       linear-gradient(135deg, #8B7EC8, #5E4FA2);
+  --aura-manifestor:      linear-gradient(135deg, #D4617A, #B83B4E);
+  --aura-reflector:       linear-gradient(135deg, #C8B8E8, #8BD4D4, #F0C878, #D4617A);
+
+  /* Center Colors (Defined) */
+  --center-head:          #F0E6B8;
+  --center-ajna:          #C8B8E8;
+  --center-throat:        #7EC8D4;
+  --center-g:             #E8C878;
+  --center-heart:         #D4788B;
+  --center-sacral:        #E89850;
+  --center-solar-plexus:  #D49878;
+  --center-spleen:        #78B89A;
+  --center-root:          #C86050;
+
+  --font-playfair: "Playfair Display", Georgia, serif;
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Luxury line input — no box, just a tasteful underline */
+/* Luxury input — tasteful underline */
 .input-line {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(26, 23, 20, 0.18);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 10px;
-  color: #1A1714;
+  color: var(--text-primary);
   font-size: 0.9375rem;
   line-height: 1;
   outline: none;
   transition: border-color 0.2s;
 }
 .input-line::placeholder {
-  color: rgba(26, 23, 20, 0.22);
+  color: var(--text-tertiary);
 }
 .input-line:focus {
-  border-bottom-color: #1A1714;
+  border-bottom-color: var(--accent-gold);
 }
 
 .label-luxury {
@@ -45,15 +75,115 @@ body {
   font-size: 9px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(26, 23, 20, 0.38);
+  color: var(--text-tertiary);
   margin-bottom: 14px;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-/* Suppress dark mode — this is a warm-light-only app */
+/* Card component */
+.card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* CTA Button — gold-to-coral gradient */
+.cta-primary {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-coral));
+  color: white;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(200, 116, 97, 0.3);
+}
+.cta-primary:active {
+  transform: translateY(0);
+}
+
+/* CTA Secondary — outlined */
+.cta-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.cta-secondary:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* Suppress dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #F8F6F2;
-    --foreground: #1A1714;
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
   }
+}
+
+/* Bottom nav safe area */
+.pb-nav {
+  padding-bottom: 80px;
+}
+
+/* Prose styles for AI readings */
+.prose-hdos h2 {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+.prose-hdos h3 {
+  font-size: 0.625rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.prose-hdos p {
+  color: var(--text-secondary);
+  line-height: 1.92;
+  font-size: 0.9375rem;
+}
+.prose-hdos strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.prose-hdos ul {
+  color: var(--text-secondary);
+}
+.prose-hdos li {
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }

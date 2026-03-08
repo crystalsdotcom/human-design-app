@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const geistSans = localFont({
+  src: "./fonts/geist-latin.woff2",
+  variable: "--font-inter",
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+const geistMono = localFont({
+  src: "./fonts/geist-mono-latin.woff2",
+  variable: "--font-jetbrains",
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
-  title: "HDOS — Human Design Operating System",
-  description: "Know yourself precisely. Accurate Human Design charts with deep AI interpretation.",
+  title: "HDOS — Your Personal Operating System",
+  description: "Discover who you were designed to be. Personalized Human Design charts with AI-powered guidance, daily transit readings, and relationship compatibility.",
+  openGraph: {
+    title: "HDOS — Your Personal Operating System",
+    description: "Enter your birth details and find out who you were designed to be — in 60 seconds.",
+    siteName: "Human Design OS",
+  },
 };
 
 export default function RootLayout({
@@ -32,7 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}>
+      <head>
+        {/* Playfair Display — loaded via CDN for display/heading font */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           {children}
         </AuthProvider>

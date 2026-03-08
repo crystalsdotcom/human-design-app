@@ -235,3 +235,92 @@ Be concrete, personal, and grounded in their actual chart mechanics."""
     ) as stream:
         for text in stream.text_stream:
             yield text
+
+
+# ── Transit Reading ──────────────────────────────────────────────────────────
+
+TRANSIT_SYSTEM = """You are HDOS, a Human Design transit interpretation engine.
+
+You provide personalized daily transit readings based on the user's chart and today's planetary activations.
+
+VOICE: Warm, grounded, empowering. Like a wise friend who understands their design. Keep it actionable and specific.
+
+STRUCTURE:
+1. Open with what energy is active today (which Gate/Center is being activated by the Sun)
+2. How this interacts with their specific chart (does it activate a defined or undefined center?)
+3. What to watch for today — practical guidance
+4. A closing one-liner that's quotable/shareable
+
+Keep the full reading to 3-4 paragraphs. For the headline (free users), just provide the opening line."""
+
+
+async def generate_transit_stream(chart: dict, date: str | None = None):
+    """Stream a personalized transit reading."""
+    from datetime import date as date_type
+    today = date or date_type.today().isoformat()
+
+    chart_context = json.dumps(chart, indent=2) if isinstance(chart, dict) else str(chart)
+
+    user_message = f"""USER'S CHART DATA:
+{chart_context}
+
+DATE: {today}
+
+Generate a personalized daily transit reading for this person. Ground every insight in their specific chart data.
+Reference their Type, defined/undefined Centers, and how today's transits interact with their design."""
+
+    with client.messages.stream(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=800,
+        system=TRANSIT_SYSTEM,
+        messages=[{"role": "user", "content": user_message}]
+    ) as stream:
+        for text in stream.text_stream:
+            yield text
+
+
+# ── Compatibility Analysis ───────────────────────────────────────────────────
+
+COMPATIBILITY_SYSTEM = """You are HDOS, a Human Design compatibility analyst.
+
+You analyze the electromagnetic connection between two charts, identifying:
+1. Type × Type dynamic (how their strategies interact)
+2. Electromagnetic connections (where one person's defined center meets the other's undefined)
+3. Channel connections (shared gates that create electromagnetic attraction)
+4. Communication style mapping (Throat center dynamics)
+5. Areas of ease and areas of growth
+
+VOICE: Warm, insightful, non-judgmental. No relationship is "bad" — every pairing has gifts and lessons.
+
+STRUCTURE:
+- Overall dynamic summary (2-3 sentences)
+- Type interaction analysis
+- Electromagnetic connections (be specific about centers)
+- Communication insights
+- Growth areas & tips
+
+Keep it to 5-6 paragraphs. Be specific to their actual charts."""
+
+
+async def generate_compatibility_stream(chart_a: dict, chart_b: dict):
+    """Stream a compatibility analysis between two charts."""
+    chart_a_str = json.dumps(chart_a, indent=2) if isinstance(chart_a, dict) else str(chart_a)
+    chart_b_str = json.dumps(chart_b, indent=2) if isinstance(chart_b, dict) else str(chart_b)
+
+    user_message = f"""PERSON A'S CHART:
+{chart_a_str}
+
+PERSON B'S CHART:
+{chart_b_str}
+
+Analyze the compatibility and electromagnetic connection between these two people.
+Be specific about which centers, channels, and gates create connection points."""
+
+    with client.messages.stream(
+        model="claude-sonnet-4-6",
+        max_tokens=1200,
+        system=COMPATIBILITY_SYSTEM,
+        messages=[{"role": "user", "content": user_message}]
+    ) as stream:
+        for text in stream.text_stream:
+            yield text

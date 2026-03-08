@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase, isSupabaseConfigured, UserProfile } from "./supabase";
+import { supabase, isSupabaseConfigured } from "./supabase";
+import type { UserProfile } from "./types";
 import type { Session } from "@supabase/supabase-js";
 
 interface AuthContextType {
@@ -9,8 +10,11 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   isSubscribed: boolean;
+  isPremium: boolean;
+  hasChart: boolean;
   signInWithEmail: (email: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
   configured: boolean;
 }
 
@@ -19,8 +23,11 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: false,
   isSubscribed: false,
+  isPremium: false,
+  hasChart: false,
   signInWithEmail: async () => ({ error: null }),
   signOut: async () => {},
+  refreshProfile: async () => {},
   configured: false,
 });
 
@@ -57,6 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data) setProfile(data as UserProfile);
   }
 
+  async function refreshProfile() {
+    if (session) await fetchProfile(session.user.id);
+  }
+
   async function signInWithEmail(email: string) {
     if (!supabase) return { error: "Auth not configured" };
     const { error } = await supabase.auth.signInWithOtp({
@@ -73,14 +84,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   }
 
+  const subscriptionStatus = profile?.subscription_status ?? "free";
+  const isPremium = subscriptionStatus === "active" || subscriptionStatus === "trial";
+
   return (
     <AuthContext.Provider value={{
       session,
       profile,
       loading,
-      isSubscribed: profile?.is_subscribed ?? false,
+      isSubscribed: isPremium,
+      isPremium,
+      hasChart: !!profile?.chart_data,
       signInWithEmail,
       signOut,
+      refreshProfile,
       configured: isSupabaseConfigured,
     }}>
       {children}

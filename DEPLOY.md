@@ -1,4 +1,4 @@
-# Deployment Guide — Human Design App
+# Deployment Guide — HDOS (Human Design Operating System)
 
 ## Architecture
 

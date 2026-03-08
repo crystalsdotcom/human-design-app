@@ -111,6 +111,14 @@ export async function streamInterpretation(
     body: JSON.stringify({ chart, question, depth }),
   });
 
+  await readSSEStream(res, onChunk, onDone);
+}
+
+async function readSSEStream(
+  res: Response,
+  onChunk: (chunk: string) => void,
+  onDone: () => void
+) {
   const reader = res.body!.getReader();
   const decoder = new TextDecoder();
 
@@ -128,4 +136,32 @@ export async function streamInterpretation(
     }
   }
   onDone();
+}
+
+export async function streamTransitReading(
+  chart: ChartData | Record<string, unknown>,
+  onChunk: (chunk: string) => void,
+  onDone: () => void,
+  date?: string
+) {
+  const res = await fetch(`${API_BASE}/api/transit/stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chart, date }),
+  });
+  await readSSEStream(res, onChunk, onDone);
+}
+
+export async function streamCompatibility(
+  chartA: ChartData | Record<string, unknown>,
+  chartB: ChartData | Record<string, unknown>,
+  onChunk: (chunk: string) => void,
+  onDone: () => void
+) {
+  const res = await fetch(`${API_BASE}/api/compatibility/stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chart_a: chartA, chart_b: chartB }),
+  });
+  await readSSEStream(res, onChunk, onDone);
 }

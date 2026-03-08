@@ -9,12 +9,12 @@ interface Props {
 }
 
 const FEATURES = [
-  "Unlimited AI chart readings — Essence, Full, Deep Dive",
-  "Decision Simulator — make choices from your design",
-  "Full gate, line & channel analysis",
-  "Unlimited charts — family, friends, partners",
-  "Relationship Compatibility (coming soon)",
-  "Business Mode — leadership insights (coming soon)",
+  "Unlimited AI questions & readings",
+  "Full daily transit readings",
+  "Complete compatibility reports",
+  "All 64 Gates & 36 Channels deep-dives",
+  "Incarnation Cross (life purpose) reading",
+  "Advanced journal with AI-powered insights",
 ];
 
 export default function UpgradeModal({ onClose, onSignInNeeded }: Props) {
@@ -74,9 +74,9 @@ export default function UpgradeModal({ onClose, onSignInNeeded }: Props) {
 
         {/* Price */}
         <div className="border border-[#1A1714]/8 px-6 py-5 mb-10 flex items-baseline gap-2">
-          <span className="font-display italic text-[3rem] text-[#1A1714] leading-none">$34</span>
+          <span className="font-[family-name:var(--font-playfair)] italic text-[3rem] text-[#1A1714] leading-none">$15</span>
           <span className="text-[12px] text-[#1A1714]/35 tracking-wider">/ month</span>
-          <span className="ml-auto text-[10px] text-[#1A1714]/25 tracking-[0.2em] uppercase">or $249 / year</span>
+          <span className="ml-auto text-[10px] text-[#1A1714]/25 tracking-[0.2em] uppercase">or $99 / year</span>
         </div>
 
         {/* Features */}

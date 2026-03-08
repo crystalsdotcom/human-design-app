@@ -110,13 +110,19 @@ async def stream_interpretation(req: InterpretRequest):
 class CheckoutRequest(BaseModel):
     user_id: str
     email: str
+    plan: str = "annual"  # "monthly" or "annual"
 
 @app.post("/api/checkout")
 async def create_checkout(req: CheckoutRequest):
-    """Create a Stripe Checkout session for the $29/mo plan."""
+    """Create a Stripe Checkout session — $15/mo or $99/year."""
     if not stripe.api_key or stripe.api_key == "":
         raise HTTPException(status_code=503, detail="Stripe not configured")
-    price_id = os.getenv("STRIPE_PRICE_ID_MONTHLY", "")
+
+    if req.plan == "annual":
+        price_id = os.getenv("STRIPE_PRICE_ID_ANNUAL", "")
+    else:
+        price_id = os.getenv("STRIPE_PRICE_ID_MONTHLY", "")
+
     if not price_id:
         raise HTTPException(status_code=503, detail="Stripe price not configured")
     try:
@@ -124,9 +130,10 @@ async def create_checkout(req: CheckoutRequest):
             mode="subscription",
             customer_email=req.email,
             line_items=[{"price": price_id, "quantity": 1}],
-            metadata={"user_id": req.user_id},
-            success_url=os.getenv("FRONTEND_URL", "http://localhost:3000") + "?subscribed=true",
-            cancel_url=os.getenv("FRONTEND_URL", "http://localhost:3000"),
+            metadata={"user_id": req.user_id, "plan": req.plan},
+            subscription_data={"trial_period_days": 14},
+            success_url=os.getenv("FRONTEND_URL", "http://localhost:3000") + "/dashboard?subscribed=true",
+            cancel_url=os.getenv("FRONTEND_URL", "http://localhost:3000") + "/upgrade",
         )
         return {"url": session.url}
     except Exception as e:
@@ -151,6 +158,7 @@ async def stripe_webhook(request: Request):
     if event["type"] in ("checkout.session.completed", "customer.subscription.created"):
         data = event["data"]["object"]
         user_id = data.get("metadata", {}).get("user_id")
+        plan = data.get("metadata", {}).get("plan", "monthly")
         customer_id = data.get("customer")
         if user_id:
             try:
@@ -161,7 +169,8 @@ async def stripe_webhook(request: Request):
                 )
                 sb.table("profiles").upsert({
                     "id": user_id,
-                    "is_subscribed": True,
+                    "subscription_status": "active",
+                    "subscription_plan": plan,
                     "stripe_customer_id": customer_id,
                 }).execute()
             except Exception:
@@ -177,7 +186,9 @@ async def stripe_webhook(request: Request):
                     os.getenv("SUPABASE_URL", ""),
                     os.getenv("SUPABASE_SERVICE_KEY", "")
                 )
-                sb.table("profiles").update({"is_subscribed": False}).eq(
+                sb.table("profiles").update({
+                    "subscription_status": "cancelled"
+                }).eq(
                     "stripe_customer_id", customer_id
                 ).execute()
             except Exception:
@@ -193,6 +204,48 @@ async def stream_simulation(req: SimulationRequest):
         async for chunk in simulate_decision_stream(
             chart=req.chart,
             decision=req.decision
+        ):
+            yield f"data: {chunk}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(generate(), media_type="text/event-stream")
+
+
+# ── Transit Readings ─────────────────────────────────────────────────────────
+
+class TransitRequest(BaseModel):
+    chart: dict
+    date: str | None = None  # ISO date string, defaults to today
+
+@app.post("/api/transit/stream")
+async def stream_transit(req: TransitRequest):
+    """Stream a personalized transit reading for today."""
+    from .interpreter import generate_transit_stream
+    async def generate():
+        async for chunk in generate_transit_stream(
+            chart=req.chart,
+            date=req.date
+        ):
+            yield f"data: {chunk}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(generate(), media_type="text/event-stream")
+
+
+# ── Compatibility ────────────────────────────────────────────────────────────
+
+class CompatibilityRequest(BaseModel):
+    chart_a: dict
+    chart_b: dict
+
+@app.post("/api/compatibility/stream")
+async def stream_compatibility(req: CompatibilityRequest):
+    """Stream a compatibility analysis between two charts."""
+    from .interpreter import generate_compatibility_stream
+    async def generate():
+        async for chunk in generate_compatibility_stream(
+            chart_a=req.chart_a,
+            chart_b=req.chart_b
         ):
             yield f"data: {chunk}\n\n"
         yield "data: [DONE]\n\n"

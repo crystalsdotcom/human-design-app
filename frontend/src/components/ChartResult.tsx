@@ -182,12 +182,12 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
         </div>
 
         {/* Type name — huge Cormorant italic, the statement */}
-        <h1 className="font-display italic text-7xl sm:text-8xl lg:text-9xl text-[#1A1714] leading-tight tracking-tight mb-3">
+        <h1 className="font-[family-name:var(--font-playfair)] italic text-7xl sm:text-8xl lg:text-9xl text-[#1A1714] leading-tight tracking-tight mb-3">
           {chart.type_}
         </h1>
 
         {/* Type tagline — the essence in one line */}
-        <p className="font-display italic text-xl mb-5" style={{ color: cfg.accent, opacity: 0.75 }}>
+        <p className="font-[family-name:var(--font-playfair)] italic text-xl mb-5" style={{ color: cfg.accent, opacity: 0.75 }}>
           {cfg.tagline}
         </p>
 
@@ -268,7 +268,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                 style={{ filter: "blur(6px)", opacity: 0.45 }}
                 aria-hidden="true"
               >
-                <h2 className="font-display italic text-4xl text-[#1A1714] leading-tight">
+                <h2 className="font-[family-name:var(--font-playfair)] italic text-4xl text-[#1A1714] leading-tight">
                   You are built to move when life meets you.
                 </h2>
                 <p className="text-[15px] text-[#1A1714]/58 leading-[1.92]">
@@ -298,7 +298,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
             {/* Gate UI */}
             <div className="text-center space-y-7">
               <div>
-                <h3 className="font-display italic text-[2.4rem] leading-tight text-[#1A1714] mb-3">
+                <h3 className="font-[family-name:var(--font-playfair)] italic text-[2.4rem] leading-tight text-[#1A1714] mb-3">
                   Your reading is ready.
                 </h3>
                 <p className="text-[13px] text-[#1A1714]/40 leading-relaxed max-w-xs mx-auto">
@@ -312,7 +312,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                   onClick={onUpgradeNeeded}
                   className="border border-[#1A1714] text-[#1A1714] hover:bg-[#1A1714] hover:text-[#FAF9F6] px-12 py-4 text-[10px] font-medium tracking-[0.26em] uppercase transition-all duration-300"
                 >
-                  Illuminate — $14 / mo
+                  Unlock — $15 / mo
                 </button>
               </div>
 
@@ -346,7 +346,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                 {!interpretation && !streaming && (
                   <div className="text-center py-4 space-y-12">
                     <div>
-                      <p className="font-display italic text-6xl sm:text-7xl text-[#1A1714] leading-tight mb-3">
+                      <p className="font-[family-name:var(--font-playfair)] italic text-6xl sm:text-7xl text-[#1A1714] leading-tight mb-3">
                         Your Reading
                       </p>
                       <p className="text-[10px] text-[#1A1714]/30 tracking-[0.3em] uppercase">
@@ -390,7 +390,7 @@ export default function ChartResult({ chart, onReset, onUpgradeNeeded }: Props) 
                 {(interpretation || streaming) && (
                   <div>
                     <div className="prose prose-base max-w-none
-                      [&_h2]:font-display [&_h2]:italic [&_h2]:text-4xl [&_h2]:font-normal [&_h2]:text-[#1A1714] [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:leading-tight
+                      [&_h2]:font-[family-name:var(--font-playfair)] [&_h2]:italic [&_h2]:text-4xl [&_h2]:font-normal [&_h2]:text-[#1A1714] [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:leading-tight
                       [&_h3]:text-[10px] [&_h3]:tracking-[0.26em] [&_h3]:uppercase [&_h3]:font-medium [&_h3]:text-[#1A1714]/35 [&_h3]:mt-10 [&_h3]:mb-3
                       [&_strong]:font-semibold [&_strong]:text-[#1A1714]
                       [&_p]:text-[#1A1714]/58 [&_p]:leading-[1.92] [&_p]:text-[15px]
